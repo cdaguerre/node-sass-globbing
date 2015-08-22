@@ -28,7 +28,7 @@ module.exports = function(url, prev, done) {
 
   // url is a glob, like foo/*.sass, resolve to importing all matching files, so
   // if there is foo/1.sass and foo/2.sass, it will import both of those files
-  var cwd = path.dirname(prev)
+  var cwd = this.options.includePaths + '/' + path.dirname(prev)
   glob(url, {cwd: cwd}, function (err, files) {
     var ret = {
       contents: "\n"
@@ -44,7 +44,7 @@ module.exports = function(url, prev, done) {
       if(/^\.s[ac]ss$/.test(ext) && prev !== abspath) {
         // don't import self
         var prev_kwd = '|prev=' + prev + '|'
-        ret.contents += '@import "' + prev_kwd + file + "\";\n"
+        ret.contents += '@import "' + prev_kwd + cwd + '/' + file + "\";\n"
       }
     })
 
